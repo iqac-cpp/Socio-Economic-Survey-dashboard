@@ -1687,7 +1687,7 @@ function dashboardJsonpRequest(params) {
     };
 
     script.src =
-      "https://script.google.com/macros/s/AKfycbzfUu-dfNXLgMNRUz0jeDj6Jidjq_6C1Ig3nnvjWUD3ET-g9TuyL1O7fSpJFgIUkVbe/exec?" +
+      "https://script.google.com/macros/s/AKfycbxV6D3HaToZ1KkDEYl80IlPLRgGhVeEfB0dsXKSSY5nDfjBljqE0BzUSen9yhuXz4O4FA/exec?" +
       query;
 
     document.body.appendChild(script);
@@ -1728,8 +1728,8 @@ async function openSurveyAnalyticsPage() {
 
   try {
     const response = await dashboardJsonpRequest({
-      action: "validateSurveyAnalyticsAccess",
-      hallTicketNo: registrationNo,
+      action: "studentProgress",
+      registrationNo: registrationNo,
       emailId: emailId
     });
 
@@ -1739,6 +1739,16 @@ async function openSurveyAnalyticsPage() {
           ? response.message
           : "Unable to verify student details."
       );
+      return;
+    }
+
+    const completed = Number(
+      response.completed ||
+      (Array.isArray(response.surveys) ? response.surveys.length : 0)
+    );
+
+    if (completed === 0) {
+      showSurveyAnalyticsError("No submitted surveys found for this Registration No and Email ID.");
       return;
     }
 
