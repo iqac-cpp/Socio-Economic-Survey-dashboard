@@ -1221,7 +1221,7 @@ function studentFinalReportJsonpRequest(params, timeoutMs) {
 
     script.onerror = function() {
       cleanup();
-      reject(new Error("Unable to connect to the report service right now."));
+      reject(new Error("Unable to verify student details right now."));
     };
 
     script.src =
@@ -1329,7 +1329,7 @@ async function submitStudentFinalReport() {
       action: "studentFinalReport",
       registrationNo: registrationNo,
       emailId: emailId
-    }, 120000);
+    }, 180000);
 
     if (!finalReportResponse || finalReportResponse.status !== "success") {
       showStudentFinalReportError(
