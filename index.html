@@ -1553,9 +1553,9 @@ function openIndividualReportPage() {
     "&registrationNo=" + encodeURIComponent(registrationNo) +
     "&emailId=" + encodeURIComponent(emailId);
 
-  window.open(individualReportUrl, "_blank", "noopener,noreferrer");
-
   closeStudentSurveyStatusReport();
+
+  window.location.href = individualReportUrl;
 }
 async function submitStudentSurveyStatusReport() {
   const registrationNo = document.getElementById("statusRegistrationNo").value.trim();
