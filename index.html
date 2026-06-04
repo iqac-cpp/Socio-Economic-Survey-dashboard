@@ -1185,7 +1185,7 @@ function showStudentFinalReportError(message) {
   errorBox.textContent = message;
   errorBox.classList.add("show");
 }
-function studentFinalReportJsonpRequest(params) {
+function studentFinalReportJsonpRequest(params, timeoutMs) {
   return new Promise(function(resolve, reject) {
     const callbackName =
       "studentFinalReportCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
@@ -1202,8 +1202,8 @@ function studentFinalReportJsonpRequest(params) {
 
     const timer = setTimeout(function() {
       cleanup();
-      reject(new Error("Request timed out. Please try again."));
-    }, 15000);
+      reject(new Error("Request timed out. The report may still be processing. Please try again after a minute."));
+    }, timeoutMs || 30000);
 
     function cleanup() {
       clearTimeout(timer);
@@ -1221,7 +1221,7 @@ function studentFinalReportJsonpRequest(params) {
 
     script.onerror = function() {
       cleanup();
-      reject(new Error("Unable to verify student details right now."));
+      reject(new Error("Unable to connect to the report service right now."));
     };
 
     script.src =
@@ -1291,7 +1291,7 @@ async function submitStudentFinalReport() {
       action: "studentProgress",
       registrationNo: registrationNo,
       emailId: emailId
-    });
+    }, 30000);
 
     if (!progressResponse || progressResponse.status !== "success") {
       showStudentFinalReportError(
@@ -1329,7 +1329,7 @@ async function submitStudentFinalReport() {
       action: "studentFinalReport",
       registrationNo: registrationNo,
       emailId: emailId
-    });
+    }, 120000);
 
     if (!finalReportResponse || finalReportResponse.status !== "success") {
       showStudentFinalReportError(
